@@ -1,0 +1,137 @@
+<main class="container">
+    <div class="bg-light p-5 rounded">
+      <h1>My Tasks</h1>
+      <p class="lead">This example is a quick exercise to illustrate how fixed to top navbar works. As you scroll, it will remain fixed to the top of your browser’s viewport.</p>
+      <a class="btn btn-lg btn-primary" href="/docs/5.0/components/navbar/" role="button">View navbar docs »</a>
+    </div>
+
+
+    <div class="modal fade" id="exampleModalPopovers" tabindex="-1" aria-labelledby="exampleModalPopoversLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalPopoversLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <mat-stepper #stepper>
+              <mat-step [stepControl]="firstFormGroup">
+                <form [formGroup]="firstFormGroup">
+                  <ng-template matStepLabel>Input title and description</ng-template>
+                  <mat-form-field>
+                    <mat-label>Title</mat-label>
+                    <input matInput placeholder="Title" formControlName="title" required>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Description</mat-label>
+                    <input matInput #desc maxlength="256" size="256" type="text" placeholder="Description" formControlName="desc" required>
+                    <mat-hint align="end">{{desc.value.length}} / 256</mat-hint>
+                  </mat-form-field>
+                  <div>
+                    <button mat-button matStepperNext>Next</button>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="secondFormGroup" label="Enter any tags">
+                <form [formGroup]="secondFormGroup">
+                  <mat-form-field class="example-form-field, example-full-width">
+                    <mat-label>Keywords or tags</mat-label>
+                    <mat-chip-grid #chipGrid aria-label="Enter your keywords or tags, example #work" [formControl]="formControl" >
+                      @for (keyword of keywords; track keyword) {
+                        <mat-chip-row (removed)="removeKeyword(keyword)">
+                          {{keyword}}
+                          <button matChipRemove aria-label="'remove ' + keyword">
+                            <mat-icon>cancel</mat-icon>
+                          </button>
+                        </mat-chip-row>
+                      }
+                    </mat-chip-grid>
+                    <input placeholder="New keyword..."
+                            [matChipInputFor]="chipGrid"
+                            (matChipInputTokenEnd)="add($event)"/>
+                  </mat-form-field>
+                  
+      
+                  <mat-form-field>
+                    <mat-label>Started at:</mat-label>
+                    <input matInput #startAt formControlName="startAt" required>
+                    
+                  </mat-form-field>
+                  <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext>Next</button>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>Done</ng-template>
+                <p>You are now done.</p>
+                <div>
+                  <button mat-button matStepperPrevious>Back</button>
+                  <button mat-button (click)="done()">Confirm</button>
+                </div>
+              </mat-step>
+            </mat-stepper>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+
+    <div class="bd-example">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalPopovers">
+        Add new task...
+      </button>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort (matSortChange)="announceSortChange($event)">
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">
+          No.
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+    
+      <!-- Name Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by title">
+          Title
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+      </ng-container>
+    
+      <!-- Weight Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by description">
+          Description
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+    
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="creationDate">
+        <th mat-header-cell *matHeaderCellDef> Creation Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.creationDate}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="completed">
+        <th mat-header-cell *matHeaderCellDef> Completed </th>
+        <td mat-cell *matCellDef="let element"> {{element.completed}} </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+    aria-label="Select page of periodic elements">
+</mat-paginator>
+  </main>
+
+  <script>
+    $('#datepicker').datepicker({
+        uiLibrary: 'bootstrap5'
+    });
+</script>
