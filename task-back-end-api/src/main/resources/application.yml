@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: task-app
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: ${USER_DATABASE}
+    password: ${PASSWORD_DATABASE}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
