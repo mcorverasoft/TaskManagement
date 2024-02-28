@@ -3,6 +3,7 @@ export interface TaskDTO {
     id:number,
     title: string,
     description: string, 
-    creationDate: string, 
+    startAt: any, 
+    tags: any,
     completed:boolean
 }

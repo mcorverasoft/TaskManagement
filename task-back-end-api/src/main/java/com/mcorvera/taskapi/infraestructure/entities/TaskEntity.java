@@ -17,8 +17,11 @@ public class TaskEntity {
     private Integer id;
     private String title;
     private String description;
+    private String tags;
     @Column(name = "creationdate")
     private Instant creationDate;
+    @Column(name = "startat")
+    private Instant startAt;
     private boolean completed;
 
 

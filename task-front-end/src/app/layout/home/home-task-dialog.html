@@ -1,0 +1,64 @@
+<mat-dialog-content>
+    <h2 mat-dialog-title>Insert new Task</h2>
+
+<mat-stepper #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Input title and description</ng-template>
+        <mat-form-field>
+          <mat-label>Title</mat-label>
+          <input matInput placeholder="Title" formControlName="title" required #title>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Description</mat-label>
+          <input matInput #desc maxlength="256" size="256" type="text" placeholder="Description" formControlName="desc" required>
+          <mat-hint align="end">{{desc.value.length}} / 256</mat-hint>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" label="Enter any tags">
+      <form [formGroup]="secondFormGroup">
+        <mat-form-field class="example-form-field, example-full-width">
+          <mat-label>Keywords or tags</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Enter your keywords or tags, example #work" [formControl]="formControl" >
+            @for (keyword of keywords; track keyword) {
+              <mat-chip-row (removed)="removeKeyword(keyword)">
+                {{keyword}}
+                <button matChipRemove aria-label="'remove ' + keyword">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input placeholder="New keyword..." formControlName="tags"
+                  [matChipInputFor]="chipGrid"
+                  (matChipInputTokenEnd)="add($event)"/>
+        </mat-form-field>
+        
+
+        <mat-form-field>
+            <mat-label>Start At:</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="startAt" #startAt>
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker" ></mat-datepicker-toggle>
+            <mat-datepicker #picker ></mat-datepicker>
+          </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <p>You are now done.</p>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="done()">Confirm</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</mat-dialog-content>

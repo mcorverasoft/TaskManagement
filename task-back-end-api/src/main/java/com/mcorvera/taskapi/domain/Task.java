@@ -13,7 +13,9 @@ public class Task {
     private Long id;
     private String title;
     private String description;
+    private String tags;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Instant creationDate;
+    private Instant startAt;
     private boolean completed;
 }
