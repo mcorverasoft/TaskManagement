@@ -57,6 +57,14 @@
         <th mat-header-cell *matHeaderCellDef> Completed </th>
         <td mat-cell *matCellDef="let element"> {{element.completed}} </td>
       </ng-container>
+
+      <ng-container matColumnDef="actions" >
+        <th mat-header-cell *matHeaderCellDef align="" class="demo-actions">Actions</th>
+        <td mat-cell *matCellDef="let row" class="demo-actions">
+          <button mat-button mat-button color="primary" (click)="onRowClick(row)"><mat-icon>edit</mat-icon></button>
+          <button mat-button mat-button color="warn"><mat-icon>delete</mat-icon></button>
+        </td>
+      </ng-container>
     
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

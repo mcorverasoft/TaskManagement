@@ -26,3 +26,8 @@ th.mat-sort-header-sorted {
     top: calc(100% - 479px) !important;
     
 }
+
+.demo-actions{
+    align-items: center;
+    text-align: center;
+}

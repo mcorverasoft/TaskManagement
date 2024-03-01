@@ -13,8 +13,14 @@ export class TaskService {
   getTasks():Observable<BaseResponseDTO>{
     return this.http.get<BaseResponseDTO>(this.baseUrl);
   }
+
   insertTask(task:TaskDTO):Observable<BaseResponseDTO>{
     return this.http.post<BaseResponseDTO>(this.baseUrl,task);
   }
+
+  updateTask(id:number, task:TaskDTO):Observable<BaseResponseDTO>{
+    return this.http.put<BaseResponseDTO>(this.baseUrl+"/"+id,task);
+  }
+
   
 }

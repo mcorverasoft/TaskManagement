@@ -15,6 +15,7 @@ import { MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {
   MatDialog,
   MAT_DIALOG_DATA,
@@ -35,7 +36,7 @@ import {
     MatPaginatorModule, 
     MatSortModule, 
     MatButtonModule,
-    
+    MatIconModule
     ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -44,7 +45,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
   private tasks:TaskDTO[]=[];
   dataSource = new MatTableDataSource(this.tasks);
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['id', 'title', 'description', 'tags', 'startAt','creationDate', 'completed'];
+  displayedColumns: string[] = ['id', 'title', 'description', 'tags', 'startAt','creationDate', 'completed', 'actions'];
   
   public isLinear = false;
   completed: boolean = false;
@@ -61,8 +62,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      data: {title: this.title, description: this.description, startAt: this.startAt},
-      height: '400px',
+      data: {title: this.title, description: this.description,tags:null, startAt: this.startAt, action:"I"},
+      height: '450px',
       width: '800px',
     });
 
@@ -73,17 +74,11 @@ export class HomeComponent implements OnInit, AfterViewInit{
               let response:BaseResponseDTO = data;
               this.dataSource = new MatTableDataSource(response.data.sort((a:TaskDTO, b:TaskDTO) => a.id - b.id));
             });
-      console.log(result);
     });
 
   }
-
   
-  
-
   ngOnInit():void{
-    
-
     this.taskService.getTasks()
     .subscribe(data=>{
       let response:BaseResponseDTO = data;
@@ -102,12 +97,14 @@ export class HomeComponent implements OnInit, AfterViewInit{
     }
   }
 
-
-  
-
- 
-
-
+  onRowClick(task:TaskDTO){
+    let keywords=task.tags .split(',').map((tags: string) => tags.trim());
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      data: {id: task.id, title: task.title, description: task.description,tags:keywords, startAt: task.startAt, action:"U"},
+      height: '420px',
+      width: '800px',
+    });
+  }
 }
 
 @Component({
@@ -139,14 +136,18 @@ export class DialogOverviewExampleDialog implements OnInit{
   public firstFormGroup!: FormGroup;
   public secondFormGroup!: FormGroup;
   formControl = new FormControl([]);
-  public keywords = [''];
+  public keywords = this.task.tags;
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     @Inject(MAT_DIALOG_DATA) public task: TaskDTO,
     private _liveAnnouncer: LiveAnnouncer,
     private _formBuilder: FormBuilder,
     private taskService:TaskService, 
-  ) {}
+    private _snackBar: MatSnackBar
+  ) {
+    
+  }
+
 
   ngOnInit():void{
     
@@ -159,7 +160,6 @@ export class DialogOverviewExampleDialog implements OnInit{
       startAt: ['', Validators.required],
     });
 
-    this.keywords=[];
   }
 
   onNoClick(): void {
@@ -169,11 +169,9 @@ export class DialogOverviewExampleDialog implements OnInit{
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-    // Add our keyword
     if (value) {
       this.keywords.push(value);
     }
-    // Clear the input value
     event.chipInput!.clear();
   }
 
@@ -181,25 +179,32 @@ export class DialogOverviewExampleDialog implements OnInit{
     const index = this.keywords.indexOf(keyword);
     if (index >= 0) {
       this.keywords.splice(index, 1);
-
       this._liveAnnouncer.announce(`removed ${keyword}`);
     }
   }
   done(){
-    
+
+    if(this.firstFormGroup.valid){
       this.task.title=this.firstFormGroup.get('title')?.value;
       this.task.description=this.firstFormGroup.get('desc')?.value;
       this.task.tags =this.formControl.value;
       const tagsArray: string[] = this.task.tags;
       this.task.tags = tagsArray.join(', ');
       this.task.startAt=this.secondFormGroup.get('startAt')?.value;
-      console.log(this.task);
-      this.taskService.getTasks()
-      this.taskService.insertTask(this.task).subscribe(data=>{
-        let response:BaseResponseDTO = data;
-        this.dialogRef.close('reload!');
-      });
-      
-    
+      this.task.completed=this.task.completed;
+      if(this.task.action=="I")
+          this.taskService.insertTask(this.task).subscribe(data=>{
+              let response:BaseResponseDTO = data;
+              this._snackBar.open("Task saved", "Saved");
+              this.dialogRef.close('reload!');
+          });
+      else if(this.task.action=="U")
+          this.taskService.updateTask(this.task.id, this.task).subscribe(data=>{
+            let response:BaseResponseDTO = data;
+            this._snackBar.open("Task updated", "Saved");
+            this.dialogRef.close('reload!');
+          });
+    }else
+      this._snackBar.open("Please enter all data", "Not Valid");
   }
 }

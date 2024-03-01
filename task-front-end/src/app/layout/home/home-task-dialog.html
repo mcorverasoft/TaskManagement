@@ -5,13 +5,15 @@
     <mat-step [stepControl]="firstFormGroup">
       <form [formGroup]="firstFormGroup">
         <ng-template matStepLabel>Input title and description</ng-template>
+        <br>
+        <input hidden formControlName="id" [(ngModel)]="task.id" #id>
         <mat-form-field>
           <mat-label>Title</mat-label>
-          <input matInput placeholder="Title" formControlName="title" required #title>
+          <input matInput placeholder="Title" formControlName="title" [(ngModel)]="task.title" required #title>
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <mat-label>Description</mat-label>
-          <input matInput #desc maxlength="256" size="256" type="text" placeholder="Description" formControlName="desc" required>
+          <input matInput #desc maxlength="256" size="256" type="text" placeholder="Description" formControlName="desc" [(ngModel)]="task.description" required >
           <mat-hint align="end">{{desc.value.length}} / 256</mat-hint>
         </mat-form-field>
         <div>
@@ -41,7 +43,7 @@
 
         <mat-form-field>
             <mat-label>Start At:</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="startAt" #startAt>
+            <input matInput [matDatepicker]="picker" formControlName="startAt" [(ngModel)]="task.startAt" #startAt>
             <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker" ></mat-datepicker-toggle>
             <mat-datepicker #picker ></mat-datepicker>

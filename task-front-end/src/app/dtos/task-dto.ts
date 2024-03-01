@@ -5,5 +5,6 @@ export interface TaskDTO {
     description: string, 
     startAt: any, 
     tags: any,
-    completed:boolean
+    completed:boolean,
+    action: string
 }
