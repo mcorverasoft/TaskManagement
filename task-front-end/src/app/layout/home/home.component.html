@@ -1,0 +1,78 @@
+<br>
+<main class="container">
+    <div class="bg-light p-5 rounded">
+      <h1>My Tasks</h1>
+      <p class="lead">This example is a quick demo to maganement tasks</p>
+    </div>
+
+    <div class="bd-example">
+      <button mat-raised-button (click)="openDialog()" mat-button color="primary">Insert new Task...</button>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort (matSortChange)="announceSortChange($event)">
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">
+          No.
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+    
+      <!-- Name Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by title">
+          Title
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+      </ng-container>
+    
+      <!-- Weight Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by description">
+          Description
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+    
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="tags">
+        <th mat-header-cell *matHeaderCellDef> Tags </th>
+        <td mat-cell *matCellDef="let element"> {{element.tags}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="startAt">
+        <th mat-header-cell *matHeaderCellDef> Start At </th>
+        <td mat-cell *matCellDef="let element"> {{element.startAt}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="creationDate">
+        <th mat-header-cell *matHeaderCellDef> Creation Date</th>
+        <td mat-cell *matCellDef="let element"> {{element.creationDate}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="completed">
+        <th mat-header-cell *matHeaderCellDef> Completed </th>
+        <td mat-cell *matCellDef="let element"> {{element.completed}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions" >
+        <th mat-header-cell *matHeaderCellDef align="" class="demo-actions">Actions</th>
+        <td mat-cell *matCellDef="let row" class="demo-actions">
+          <button mat-button mat-button color="primary" (click)="onRowClick(row)"><mat-icon>edit</mat-icon></button>
+          <button mat-button mat-button color="warn"><mat-icon>delete</mat-icon></button>
+        </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+    aria-label="Select page of periodic elements">
+</mat-paginator>
+  </main>
+
+
